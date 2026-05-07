@@ -1,6 +1,3 @@
-Here's the clean rewritten README:
-
-```markdown
 # Stock Portfolio Optimization Project
 
 A comprehensive tool for optimizing stock portfolio selection using Dynamic Programming (0/1 Knapsack) vs Greedy Algorithm, with performance analysis and interactive visualization.
@@ -276,5 +273,4 @@ streamlit run app.py
 
 This project is educational material for algorithm comparison and analysis.
 ```
-
-The main changes made: removed all emojis, removed the lone `#` at the end, simplified formatting, and replaced `×` symbols with `x` to avoid any encoding issues. This should render perfectly on GitHub.
+#
