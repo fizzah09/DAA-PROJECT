@@ -10,10 +10,15 @@ import os
 import time
 import requests
 from typing import Optional, List
+import toml
 
-# Load environment variables from .env file
-from dotenv import load_dotenv
-load_dotenv()
+# Load secrets from secrets.toml
+def load_secrets(filepath='secrets.toml'):
+    """Load secrets from TOML file"""
+    secrets_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), filepath)
+    if not os.path.exists(secrets_path):
+        raise FileNotFoundError(f"Secrets file not found: {secrets_path}")
+    return toml.load(secrets_path)
 
 
 def fetch_stock_data(tickers: List[str], period: str = "1y") -> Optional[pd.DataFrame]:
@@ -27,10 +32,15 @@ def fetch_stock_data(tickers: List[str], period: str = "1y") -> Optional[pd.Data
     Returns:
         pd.DataFrame: Historical stock data (Close prices)
     """
-    # Get API key from environment variable
-    api_key = os.getenv('MARKETSTACK_API_KEY')
-    if not api_key:
-        raise ValueError("MARKETSTACK_API_KEY environment variable not set. Please set your MarketStack API key.")
+    # Get API key from secrets.toml
+    try:
+        secrets = load_secrets()
+        api_key = secrets['marketstack']['api_key']
+    except (KeyError, FileNotFoundError) as e:
+        raise ValueError(f"Failed to load MarketStack API key from secrets.toml: {e}")
+    
+    if not api_key or api_key == "your-marketstack-api-key-here":
+        raise ValueError("MarketStack API key not configured. Please update your secrets.toml file.")
 
     # Map period to date range
     end_date = datetime.now()
